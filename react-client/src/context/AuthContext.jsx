@@ -1,17 +1,33 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import api from "../api/axios";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        const saved = localStorage.getItem("user");
-        return saved ? JSON.parse(saved) : null;
-    });
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const isAuthenticated = !!user;
+    const checkAuth = useCallback(async () => {
+        try {
+            const res = await api.get("/auth/me");
+            const loggedInUser = {
+                id: res.data._id,
+                studentNumber: res.data.studentNumber,
+                role: res.data.role
+            };
+            setUser(loggedInUser);
+        } catch (err) {
+            setUser(null);
+            localStorage.removeItem("user");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-    // REAL login: call backend, save user, return role
+    useEffect(() => {
+        checkAuth();
+    }, [checkAuth]);
+
     const login = async (studentNumber, password) => {
         const res = await api.post("/auth/login", { studentNumber, password });
 
@@ -23,25 +39,22 @@ export const AuthProvider = ({ children }) => {
 
         setUser(loggedInUser);
         localStorage.setItem("user", JSON.stringify(loggedInUser));
-
-        console.log(loggedInUser);
-
-        return loggedInUser.role; // so Login page knows where to navigate
+        return loggedInUser.role;
     };
 
     const logout = async () => {
         try {
-            await api.post("/auth/logout"); // your backend logout route
+            await api.post("/auth/logout");
         } catch (e) {
-            // ignore errors here
+            // ignore
         }
         setUser(null);
         localStorage.removeItem("user");
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
-            {children}
+        <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, loading, checkAuth }}>
+            {!loading && children}
         </AuthContext.Provider>
     );
 };

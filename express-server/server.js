@@ -1,9 +1,14 @@
-﻿const config = require("./config/config");
-const connectDB = require("./config/mongoose");
+require("dotenv").config();
+const config = require("./config/config");
 const app = require("./config/express");
+const connectDB = require("./config/mongoose");
 
 connectDB();
 
-app.listen(config.port, () => {
-    console.log(`Server running on port ${config.port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+    app.listen(config.port, () => {
+        console.log(`Server running on port ${config.port}`);
+    });
+}
+
+module.exports = app;

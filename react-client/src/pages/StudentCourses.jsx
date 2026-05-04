@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Container,
   Card,
@@ -6,15 +6,18 @@ import {
   Form,
   Row,
   Col,
-  Alert,
-  Spinner
+  Spinner,
+  Pagination
 } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
+import { useToast } from "../context/ToastContext";
 
 export default function StudentCourses() {
+  const { showToast } = useToast();
   const [courses, setCourses] = useState([]);        // student's enrolled courses
   const [allCourses, setAllCourses] = useState([]);  // all available courses
+  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
 
   const [selectedCourse, setSelectedCourse] = useState(""); // for Add
   const [sectionTargets, setSectionTargets] = useState({}); // per-course new section
@@ -24,7 +27,6 @@ export default function StudentCourses() {
   const [adding, setAdding] = useState(false);
   const [dropping, setDropping] = useState(false);
   const [changingId, setChangingId] = useState(null); // which course is being saved
-  const [error, setError] = useState("");
 
   // Load student's courses
   const loadCourses = async () => {
@@ -34,44 +36,49 @@ export default function StudentCourses() {
       setCourses(res.data);
     } catch (err) {
       console.error(err);
-      setError("Failed to load your courses.");
+      showToast("Failed to load your courses.", "danger");
     } finally {
       setLoading(false);
     }
   };
 
-  // Load all courses
-  const loadAll = async () => {
+  // Load all courses with pagination
+  const loadAll = useCallback(async (page = 1) => {
     try {
-      const res = await api.get("/courses");
-      setAllCourses(res.data);
+      const res = await api.get(`/courses?page=${page}&limit=100`); // Use a larger limit for the dropdown if needed, or implement search
+      setAllCourses(res.data.courses);
+      setPagination({
+        currentPage: res.data.currentPage,
+        totalPages: res.data.totalPages
+      });
     } catch (err) {
       console.error(err);
-      setError("Failed to load available courses.");
+      showToast("Failed to load available courses.", "danger");
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     loadCourses();
     loadAll();
-  }, []);
+  }, [loadAll]);
 
   // Add a new course
   const handleAdd = async () => {
     if (!selectedCourse) {
-      setError("Please select a course to add.");
+      showToast("Please select a course to add.", "warning");
       return;
     }
 
     try {
       setAdding(true);
-      setError("");
       await api.post(`/courses/${selectedCourse}/add`);
+      showToast("Course added successfully!", "success");
       setSelectedCourse("");
       loadCourses();
     } catch (err) {
       console.error(err);
-      setError("Failed to add course.");
+      const message = err.response?.data?.message || "Failed to add course.";
+      showToast(message, "danger");
     } finally {
       setAdding(false);
     }
@@ -83,59 +90,52 @@ export default function StudentCourses() {
 
     try {
       setDropping(true);
-      setError("");
       await api.delete(`/courses/${id}/drop`);
+      showToast("Course dropped successfully.", "success");
       loadCourses();
     } catch (err) {
       console.error(err);
-      setError("Failed to drop course.");
+      showToast("Failed to drop course.", "danger");
     } finally {
       setDropping(false);
     }
   };
 
-  // Change section: move between two offerings of the same courseCode
+  // Change section
   const handleChangeSection = async (fromCourse) => {
     const fromCourseId = fromCourse._id;
     const toCourseId = sectionTargets[fromCourseId];
 
     if (!toCourseId) {
-      setError("Please select a new section for this course.");
+      showToast("Please select a new section for this course.", "warning");
       return;
     }
 
     try {
       setChangingId(fromCourseId);
-      setError("");
       await api.post("/courses/changeEnrollment", {
         fromCourseId,
         toCourseId
       });
 
-      // Clear selection + editing state for this course
+      showToast("Section updated successfully!", "success");
       setSectionTargets((prev) => ({
         ...prev,
         [fromCourseId]: ""
       }));
       setEditingCourseId(null);
-
-      // Reload student's list
       loadCourses();
     } catch (err) {
       console.error(err);
-      setError("Failed to change section.");
+      showToast("Failed to change section.", "danger");
     } finally {
       setChangingId(null);
     }
   };
 
   const handleStartEditSection = (course, otherSections) => {
-    // If no other sections, nothing to edit
     if (otherSections.length === 0) return;
-
     setEditingCourseId(course._id);
-
-    // Ensure we have a default value for this course's selection
     setSectionTargets((prev) => ({
       ...prev,
       [course._id]: prev[course._id] || ""
@@ -144,14 +144,12 @@ export default function StudentCourses() {
 
   const handleCancelEditSection = (courseId) => {
     setEditingCourseId(null);
-    // optional: clear selection for this course
     setSectionTargets((prev) => ({
       ...prev,
       [courseId]: ""
     }));
   };
 
-  // Helper: other sections of same courseCode
   const getOtherSectionsForCourse = (course) => {
     return allCourses.filter(
       (c) =>
@@ -166,12 +164,6 @@ export default function StudentCourses() {
 
       <Container className="mt-4">
         <h2 className="mb-4">My Courses</h2>
-
-        {error && (
-          <Alert variant="danger" className="mb-3">
-            {error}
-          </Alert>
-        )}
 
         {/* 1) Add Course */}
         <Card className="p-3 shadow-sm mb-4">
@@ -199,7 +191,7 @@ export default function StudentCourses() {
           </Row>
         </Card>
 
-        {/* 2) Student's Enrolled Courses (with Update Section flow) */}
+        {/* 2) Student's Enrolled Courses */}
         {loading ? (
           <div className="text-center my-4">
             <Spinner animation="border" size="sm" /> Loading courses...
@@ -225,7 +217,6 @@ export default function StudentCourses() {
                       <p className="mb-1">Current Section: {course.section}</p>
                       <p className="mb-3">Semester: {course.semester}</p>
 
-                      {/* Update Section UI */}
                       {otherSections.length > 0 ? (
                         <>
                           {!isEditing && (

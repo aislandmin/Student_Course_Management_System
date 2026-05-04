@@ -28,4 +28,7 @@ const CourseSchema = new Schema({
     }]
 });
 
+// A course offering is uniquely identified by courseCode + semester + section
+CourseSchema.index({ courseCode: 1, semester: 1, section: 1 }, { unique: true });
+
 module.exports = mongoose.model('Course', CourseSchema);
