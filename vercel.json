@@ -19,7 +19,10 @@
       "destination": "express-server/server.js"
     },
     {
-      "source": "/((?!api/).*)",
+      "handle": "filesystem"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
