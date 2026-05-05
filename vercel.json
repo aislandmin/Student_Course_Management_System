@@ -19,8 +19,8 @@
       "destination": "express-server/server.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "react-client/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
