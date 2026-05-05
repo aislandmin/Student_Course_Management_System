@@ -31,6 +31,7 @@ export default function StudentForm({ register, handleSubmit, onSubmit, errors, 
                         <InputGroup hasValidation>
                             <Form.Control
                                 type={showPassword ? "text" : "password"}
+                                autoComplete="new-password"
                                 {...register("password", {
                                     required: !editingStudentId ? "Password is required" : false,
                                     minLength: { value: 6, message: "Min length 6 characters" }
@@ -96,6 +97,7 @@ export default function StudentForm({ register, handleSubmit, onSubmit, errors, 
                         <Form.Label>Email</Form.Label>
                         <Form.Control
                             type="email"
+                            autoComplete="off"
                             {...register("email", {
                                 required: "Email is required",
                                 pattern: { value: /^\S+@\S+$/i, message: "Invalid email" }
