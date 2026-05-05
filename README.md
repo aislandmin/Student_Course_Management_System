@@ -1,10 +1,22 @@
 # Student-Course Management System (MERN Stack)
 
-A production-ready full-stack web application built with the **MERN** (**M**ongoDB, **E**xpress.js, **R**eact, **N**ode.js) stack for managing students, courses, and enrollments. This project demonstrates advanced architectural patterns and professional security standards.
+A production-ready full-stack web application built with the **MERN** (**M**ongoDB, **E**xpress.js, **R**eact, **N**ode.js) stack, designed to streamline academic administration and student course enrollment. 
 
-** [Live Demo](https://student-course-management-college.vercel.app/)**
+This platform provides a comprehensive management suite for **Administrators** to curate a course catalog and manage the student directory, alongside a dynamic portal for **Students** to discover courses, track their enrollments, and manage their professional skill profiles. The system is built with a focus on data integrity, secure authentication, and a responsive user experience.
+
+## 🌐 Live Demo & Testing
+
+You can access the live production environment here:
+**🚀 [Live Demo](https://student-course-management-college.vercel.app/)**
+
+### **Test Credentials (Administrator)**
+- **Student Number / Admin ID:** `admin001`
+- **Password:** `password123`
+
+*(Note: You can also login as any of the seeded students, e.g., `301234567` / `password123`)*
 
 ## 🛠️ Technical Stack
+
 
 - **Frontend:** React (Vite), React Bootstrap (UI Components), React Hook Form (Form Management), Axios (API Client).
 - **Backend:** Node.js, Express.js (RESTful API), Mongoose (ODM for MongoDB).
