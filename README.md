@@ -2,6 +2,8 @@
 
 A production-ready full-stack web application built with the **MERN** (**M**ongoDB, **E**xpress.js, **R**eact, **N**ode.js) stack for managing students, courses, and enrollments. This project demonstrates advanced architectural patterns and professional security standards.
 
+** [Live Demo](https://student-course-management-college.vercel.app/)**
+
 ## 🛠️ Technical Stack
 
 - **Frontend:** React (Vite), React Bootstrap (UI Components), React Hook Form (Form Management), Axios (API Client).
@@ -9,7 +11,7 @@ A production-ready full-stack web application built with the **MERN** (**M**ongo
 - **Security:** JSON Web Tokens (JWT) with httpOnly Cookies, Bcrypt.js (Password Hashing).
 - **Architecture:** Model-View-Controller (MVC) pattern on the backend, Component-based architecture on the frontend.
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 student-course-system/
@@ -36,7 +38,7 @@ student-course-system/
 └── GEMINI.md                  # Architectural guidelines
 ```
 
-## 🚀 Industry-Level Implementations
+## Industry-Level Implementations
 
 This project incorporates professional software engineering patterns designed for security, scalability, and maintainability:
 
@@ -57,7 +59,7 @@ This project incorporates professional software engineering patterns designed fo
 - **Centralized Feedback System:** A global Toast context provides real-time, non-intrusive feedback for system actions.
 - **Fault Tolerance:** A global React **Error Boundary** catches runtime UI crashes and presents a graceful recovery path for the user.
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18+)

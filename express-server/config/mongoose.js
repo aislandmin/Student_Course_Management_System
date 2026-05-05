@@ -3,8 +3,11 @@ const config = require("./config");
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(config.mongoUri);
-        console.log("MongoDB Connected");
+        console.log("Connecting to MongoDB...");
+        await mongoose.connect(config.mongoUri, {
+            serverSelectionTimeoutMS: 5000, // Timeout after 5s
+        });
+        console.log("MongoDB Connected Successfully");
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);

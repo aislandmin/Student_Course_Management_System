@@ -1,8 +1,11 @@
+// const dns = require("dns");
+// dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const connectDB = require("./config/mongoose");
 const Student = require("./app/models/student");
 const Course = require("./app/models/course");
-require("dotenv").config();
 
 async function seed() {
     try {
@@ -17,7 +20,7 @@ async function seed() {
         // 1. Create System Administrator (Special Student Number)
         const adminPassword = await bcrypt.hash("password123", 10);
         const admin = new Student({
-            studentNumber: "ADMIN001", // Special ID for Admin
+            studentNumber: "admin001", // Special ID for Admin
             password: adminPassword,
             firstName: "System",
             lastName: "Administrator",
@@ -174,7 +177,7 @@ async function seed() {
         await Course.insertMany(coursesData);
         console.log(`- ${coursesData.length} Courses created`);
 
-        console.log("\nDatabase seeded successfully! ✅");
+        console.log("\nDatabase seeded successfully! ");
     } catch (err) {
         console.error("Error seeding database:", err);
     } finally {

@@ -37,10 +37,8 @@ export default function AppNavbar() {
                   </NavDropdown>
                 )}
 
-                <Nav.Link as={Link} to="/student/courses">My Personal Courses</Nav.Link>
-                {user.role === "student" && (
-                  <Nav.Link as={Link} to="/student/profile">My Profile</Nav.Link>
-                )}
+                <Nav.Link as={Link} to="/student/courses">My Courses</Nav.Link>
+                <Nav.Link as={Link} to="/student/profile">My Profile</Nav.Link>
                 <Nav.Link onClick={logout} className="text-warning">Logout</Nav.Link>
               </>
             )}
