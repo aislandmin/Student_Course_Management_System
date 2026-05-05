@@ -4,10 +4,10 @@ A production-ready full-stack web application built with the **MERN** (**M**ongo
 
 This platform provides a comprehensive management suite for **Administrators** to curate a course catalog and manage the student directory, alongside a dynamic portal for **Students** to discover courses, track their enrollments, and manage their professional skill profiles. The system is built with a focus on data integrity, secure authentication, and a responsive user experience.
 
-## 🌐 Live Demo & Testing
+## Live Demo & Testing
 
 You can access the live production environment here:
-**🚀 [Live Demo](https://student-course-management-college.vercel.app/)**
+** [Live Demo](https://student-course-management-college.vercel.app/)**
 
 ### **Test Credentials (Administrator)**
 - **Student Number / Admin ID:** `admin001`
@@ -15,7 +15,7 @@ You can access the live production environment here:
 
 *(Note: You can also login as any of the seeded students, e.g., `301234567` / `password123`)*
 
-## 🛠️ Technical Stack
+## Technical Stack
 
 
 - **Frontend:** React (Vite), React Bootstrap (UI Components), React Hook Form (Form Management), Axios (API Client).
