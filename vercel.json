@@ -20,7 +20,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "react-client/$1"
+      "destination": "react-client/index.html"
     }
   ]
 }
