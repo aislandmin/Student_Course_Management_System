@@ -45,9 +45,8 @@ student-course-system/
 │   │   ├── context/           # Global State Management (Auth, Toast)
 │   │   ├── pages/             # Route-level View components
 │   │   └── main.jsx           # App entry point with Error Boundary
-│   └── .env.example           # Frontend environment template
-├── README.md                  # Project overview & Setup
-└── GEMINI.md                  # Architectural guidelines
+│   └── .env.example           # Frontend environment template 
+└── README.md                  # Project overview & Setup
 ```
 
 ## Industry-Level Implementations
